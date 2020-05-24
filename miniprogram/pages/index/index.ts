@@ -1,53 +1,52 @@
 const app = getApp<IAppOption>();
 
 interface IPage {
-  ctx: WechatMiniprogram.CanvasContext;
-  ratio: number;
-  canvasState: {
-    // 记录当前的操作是移动还是缩放
-    action: 'none' | 'move' | 'scale';
-    x: number;
-    y: number;
-    lastX: number;
-    lastY: number;
-  };
-  _setTempFile: (path: string) => Promise<boolean>;
-  _draw: () => void;
-  handleFillRect: () => void;
+  _setTempFilePath: (path: string) => void;
   handleGetUserInfo: WechatMiniprogram.EventCallback;
-  handleTouchStart: WechatMiniprogram.EventCallback;
+  handleChooseImage: () => void;
   [key: string]: any;
 }
 
 interface IData {
   userInfo: Optional<WechatMiniprogram.UserInfo>;
-  tempFile: {
-    path: string;
+  tempFilePath: string;
+  movableSize: {
     width: number;
     height: number;
   };
-  exportPath: string;
+  imgWidth: number;
+  scaleValue: number;
 }
 
-Page<IData, IPage>({
-  ctx: wx.createCanvasContext('canvas'),
-  ratio: 0,
-  canvasState: {
-    action: 'none',
-    x: 0,
-    y: 0,
-    lastX: 0,
-    lastY: 0,
-  },
+const CANVAS_SIZE = 240;
 
+Page<IData, IPage>({
   data: {
     userInfo: wx.getStorageSync('userInfo') || {},
-    tempFile: {
-      path: '',
-      width: 0,
-      height: 0,
+    tempFilePath: '',
+    movableSize: {
+      width: CANVAS_SIZE,
+      height: CANVAS_SIZE,
     },
-    exportPath: '',
+    imgWidth: CANVAS_SIZE,
+    scaleValue: 1,
+  },
+
+  _setTempFilePath(path: string) {
+    wx.getImageInfo({
+      src: path,
+      success: ({ width, height }) => {
+        let imgWidth: number;
+        let movableSize = { width: 0, height: 0 };
+        if (width <= height) {
+          movableSize.width = imgWidth = CANVAS_SIZE;
+        } else {
+          movableSize.width = imgWidth = (CANVAS_SIZE * width) / height;
+        }
+        movableSize.height = (height / width) * imgWidth;
+        this.setData({ tempFilePath: path, movableSize, imgWidth });
+      },
+    });
   },
 
   onReady() {
@@ -62,7 +61,7 @@ Page<IData, IPage>({
               wx.downloadFile({
                 url: userInfo.avatarUrl.replace(/\d+$/, '0'),
                 success: ({ tempFilePath }) => {
-                  this._setTempFile(tempFilePath);
+                  this._setTempFilePath(tempFilePath);
                 },
               });
             },
@@ -70,75 +69,6 @@ Page<IData, IPage>({
         }
       },
     });
-    const { screenWidth } = wx.getSystemInfoSync();
-    this.ratio = screenWidth / 375;
-    this.ctx.scale(this.ratio, this.ratio);
-    this.ctx.setFillStyle('white');
-    this.ctx.fillRect(0, 0, 375, 375);
-    this.ctx.draw();
-  },
-
-  _setTempFile(path: string): Promise<boolean> {
-    return new Promise((resolve) => {
-      wx.getImageInfo({
-        src: path,
-        success: ({ width, height }) => {
-          this.setData(
-            {
-              tempFile: {
-                path,
-                width,
-                height,
-              },
-            },
-            () => resolve(true)
-          );
-        },
-        fail: () => resolve(false),
-      });
-    });
-  },
-
-  _draw() {
-    this.ctx.save();
-    const {
-      tempFile: { path },
-    } = this.data;
-    const { x, y } = this.canvasState;
-    this.ctx.translate(x, y);
-    this.ctx.drawImage(path, 0, 0, 240, 240);
-    this.ctx.draw();
-    this.ctx.restore();
-  },
-
-  handleFillRect() {
-    this._draw();
-  },
-
-  handleTouchStart({ touches }) {
-    if (touches.length === 1) {
-      this.canvasState.action = 'move';
-      this.canvasState.lastX = touches[0].x;
-      this.canvasState.lastY = touches[0].y;
-    }
-  },
-
-  handleTouchMove(event: any) {
-    const { action } = this.canvasState;
-    const { changedTouches } = event;
-    if (action === 'none') return;
-    if (action === 'move' && changedTouches.length) {
-      const { x, y } = changedTouches[0];
-      this.canvasState.x += x - this.canvasState.lastX;
-      this.canvasState.y += y - this.canvasState.lastY;
-      this.canvasState.lastX = x;
-      this.canvasState.lastY = y;
-      this._draw();
-    }
-  },
-
-  handleTouchEnd(_event: any) {
-    this.canvasState.action = 'none';
   },
 
   handleGetUserInfo({ detail }) {
@@ -149,7 +79,18 @@ Page<IData, IPage>({
     wx.downloadFile({
       url: userInfo.avatarUrl.replace(/\d+$/, '0'),
       success: ({ tempFilePath }) => {
-        this._setTempFile(tempFilePath);
+        this._setTempFilePath(tempFilePath);
+      },
+    });
+  },
+
+  handleChooseImage() {
+    wx.chooseImage({
+      count: 1,
+      sizeType: ['compressed'],
+      sourceType: ['album', 'camera'],
+      success: ({ tempFilePaths }) => {
+        this._setTempFilePath(tempFilePaths[0]);
       },
     });
   },

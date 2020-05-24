@@ -4,13 +4,18 @@ $canvas-wrapper-size: 240px;
   position: relative;
   width: $canvas-wrapper-size;
   height: $canvas-wrapper-size;
-  border: 1px solid #f1f2f3;
+  outline: 1px solid #f1f2f3;
   box-sizing: border-box;
   margin: 20px auto;
 
-  #canvas {
+  .movable-area {
     width: 100%;
     height: 100%;
+    overflow: hidden;
+  }
+
+  .movable {
+    overflow: hidden;
   }
 
   .auth-wrapper {

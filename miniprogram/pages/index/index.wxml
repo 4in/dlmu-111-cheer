@@ -1,17 +1,21 @@
 <view>
   <view class="canvas-wrapper">
-    <canvas
-      id="canvas"
-      canvas-id="canvas"
-      bindtouchstart="handleTouchStart"
-      bindtouchmove="handleTouchMove"
-      bindtouchend="handleTouchEnd"
-    ></canvas>
-    <view wx:if="{{!tempFile.path}}" class="auth-wrapper">
-      <view>点击授权登录加载头像</view>
-      <button class="btn-auth" open-type="getUserInfo" bindgetuserinfo="handleGetUserInfo">授权登录</button>
+    <movable-area wx:if="{{tempFilePath}}" class="movable-area" scale-area>
+      <movable-view
+        class="movable"
+        style="width: {{movableSize.width}}px; height:{{movableSize.height}}px"
+        direction="all"
+        scale
+        scale-min="1"
+        scale-value="{{scaleValue}}"
+      >
+        <image src="{{tempFilePath}}" style="width: {{imgWidth}}px" mode="widthFix"></image>
+      </movable-view>
+    </movable-area>
+    <view wx:else class="auth-wrapper">
+      <view>点击授权加载头像(仅保存在本地)</view>
+      <button class="btn-auth" open-type="getUserInfo" bindgetuserinfo="handleGetUserInfo">授权</button>
     </view>
   </view>
-  <button bindtap="handleFillRect">fillRect</button>
-  <image src="{{exportPath}}" mode="widthFix"></image>
+  <button bindtap="handleChooseImage">ChooseImage</button>
 </view>

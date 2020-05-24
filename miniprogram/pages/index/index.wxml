@@ -1,3 +1,17 @@
 <view>
-  Hello, world!
+  <view class="canvas-wrapper">
+    <canvas
+      id="canvas"
+      canvas-id="canvas"
+      bindtouchstart="handleTouchStart"
+      bindtouchmove="handleTouchMove"
+      bindtouchend="handleTouchEnd"
+    ></canvas>
+    <view wx:if="{{!tempFile.path}}" class="auth-wrapper">
+      <view>点击授权登录加载头像</view>
+      <button class="btn-auth" open-type="getUserInfo" bindgetuserinfo="handleGetUserInfo">授权登录</button>
+    </view>
+  </view>
+  <button bindtap="handleFillRect">fillRect</button>
+  <image src="{{exportPath}}" mode="widthFix"></image>
 </view>

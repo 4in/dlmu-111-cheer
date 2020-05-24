@@ -1,0 +1,33 @@
+$canvas-wrapper-size: 240px;
+
+.canvas-wrapper {
+  position: relative;
+  width: $canvas-wrapper-size;
+  height: $canvas-wrapper-size;
+  border: 1px solid #f1f2f3;
+  box-sizing: border-box;
+  margin: 20px auto;
+
+  #canvas {
+    width: 100%;
+    height: 100%;
+  }
+
+  .auth-wrapper {
+    position: absolute;
+    display: flex;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba($color: #000, $alpha: 0.1);
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    word-break: break-word;
+
+    .btn-auth {
+      margin-top: 20rpx;
+    }
+  }
+}

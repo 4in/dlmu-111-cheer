@@ -1,4 +1,4 @@
-const app = getApp<IAppOption>();
+import config from '../../config';
 
 interface IPage {
   _setTempFilePath: (path: string) => void;
@@ -8,43 +8,70 @@ interface IPage {
 }
 
 interface IData {
+  // 容器尺寸
+  canvasSize: number;
+  // 用户信息
   userInfo: Optional<WechatMiniprogram.UserInfo>;
+  // 临时文件路径
   tempFilePath: string;
-  movableSize: {
+  // 边框的根目录
+  rootDir: string;
+  // 边框信息数组
+  frames: Frame[];
+  // 当前边框的下标
+  currentFrame: number;
+  // 可移动区域大小
+  movableRect: {
     width: number;
     height: number;
+    translateX: number;
+    translateY: number;
+    scale: number;
   };
+  // 图片容器宽度
   imgWidth: number;
+  // 缩放比例
   scaleValue: number;
 }
 
-const CANVAS_SIZE = 240;
+const CANVAS_SIZE = config.canvasSize;
 
 Page<IData, IPage>({
   data: {
+    canvasSize: config.canvasSize,
     userInfo: wx.getStorageSync('userInfo') || {},
     tempFilePath: '',
-    movableSize: {
+    rootDir: config.frames.rootDir,
+    frames: config.frames.frames,
+    currentFrame: 0,
+    movableRect: {
       width: CANVAS_SIZE,
       height: CANVAS_SIZE,
+      translateX: 0,
+      translateY: 0,
+      scale: 1,
     },
     imgWidth: CANVAS_SIZE,
     scaleValue: 1,
   },
 
   _setTempFilePath(path: string) {
+    const { frames, currentFrame } = this.data;
     wx.getImageInfo({
       src: path,
       success: ({ width, height }) => {
         let imgWidth: number;
-        let movableSize = { width: 0, height: 0 };
+        let movableRect = { width: 0, height: 0, translateX: 0, translateY: 0, scale: 1 };
         if (width <= height) {
-          movableSize.width = imgWidth = CANVAS_SIZE;
+          movableRect.width = imgWidth = CANVAS_SIZE;
         } else {
-          movableSize.width = imgWidth = (CANVAS_SIZE * width) / height;
+          movableRect.width = imgWidth = (CANVAS_SIZE * width) / height;
         }
-        movableSize.height = (height / width) * imgWidth;
-        this.setData({ tempFilePath: path, movableSize, imgWidth });
+        movableRect.height = (height / width) * imgWidth;
+        movableRect.translateX = (frames[currentFrame].rect.x / frames[currentFrame].rect.frameSize) * CANVAS_SIZE;
+        movableRect.translateY = (frames[currentFrame].rect.y / frames[currentFrame].rect.frameSize) * CANVAS_SIZE;
+        movableRect.scale = frames[currentFrame].rect.contentSize / frames[currentFrame].rect.frameSize;
+        this.setData({ tempFilePath: path, movableRect, imgWidth });
       },
     });
   },

@@ -1,9 +1,14 @@
 <view>
-  <view class="canvas-wrapper">
-    <movable-area wx:if="{{tempFilePath}}" class="movable-area" scale-area>
+  <view class="canvas-wrapper" style="width: {{canvasSize}}px; height: {{canvasSize}}px">
+    <movable-area
+      wx:if="{{tempFilePath}}"
+      class="movable-area"
+      style="transform: translateX({{movableRect.translateX}}px) translateY({{movableRect.translateY}}px) scale({{movableRect.scale}}); transform-origin: 0 0;"
+      scale-area
+    >
       <movable-view
         class="movable"
-        style="width: {{movableSize.width}}px; height:{{movableSize.height}}px"
+        style="width: {{movableRect.width}}px; height: {{movableRect.height}}px"
         direction="all"
         scale
         scale-min="1"
@@ -16,6 +21,7 @@
       <view>点击授权加载头像(仅保存在本地)</view>
       <button class="btn-auth" open-type="getUserInfo" bindgetuserinfo="handleGetUserInfo">授权</button>
     </view>
+    <image class="frame" src="{{rootDir}}{{frames[currentFrame].filename}}" mode="widthFix"></image>
   </view>
   <button bindtap="handleChooseImage">ChooseImage</button>
 </view>

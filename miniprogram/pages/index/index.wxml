@@ -1,5 +1,5 @@
 <view>
-  <view class="canvas-wrapper" style="width: {{canvasSize}}px; height: {{canvasSize}}px">
+  <view class="canvas-container" style="width: {{canvasSize}}px; height: {{canvasSize}}px">
     <movable-area
       wx:if="{{tempFilePath}}"
       class="movable-area"
@@ -21,7 +21,27 @@
       <view>点击授权加载头像(仅保存在本地)</view>
       <button class="btn-auth" open-type="getUserInfo" bindgetuserinfo="handleGetUserInfo">授权</button>
     </view>
-    <image class="frame" src="{{rootDir}}{{frames[currentFrame].filename}}" mode="widthFix"></image>
+    <image
+      wx:if="{{tempFilePath}}"
+      class="frame"
+      src="{{rootDir}}{{frames[currentFrame].filename}}"
+      mode="widthFix"
+    ></image>
   </view>
-  <button bindtap="handleChooseImage">ChooseImage</button>
+  <view class="btns-container">
+    <button bindtap="handleChooseImage">ChooseImage</button>
+    <button bindtap="handleExport">Export</button>
+  </view>
+  <view class="frames-container">
+    <view
+      class="frame-wrapper"
+      wx:for="{{frames}}"
+      wx:key="filename"
+      bindtap="handleChangeCurrentFrame"
+      data-index="{{index}}"
+    >
+      <image class="frame-img" src="{{rootDir}}{{item.filename}}" mode="aspectFill"></image>
+      <view class="frame-name">{{item.name}}</view>
+    </view>
+  </view>
 </view>

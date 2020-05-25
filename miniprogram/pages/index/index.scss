@@ -1,4 +1,4 @@
-.canvas-wrapper {
+.canvas-container {
   position: relative;
   outline: 1px solid #f1f2f3;
   box-sizing: border-box;
@@ -38,7 +38,33 @@
     top: 0;
     width: 100%;
     height: 100%;
-    outline: 1px solid red;
     pointer-events: none;
+  }
+}
+
+.btns-container {
+  display: flex;
+}
+
+.frames-container {
+  margin-top: 30rpx;
+  display: flex;
+  flex-wrap: wrap;
+
+  .frame-wrapper {
+    margin-top: 16rpx;
+    width: 33.3333%;
+    max-width: 33.3333%;
+    text-align: center;
+
+    .frame-img {
+      width: 80px;
+      height: 80px;
+    }
+
+    .frame-name {
+      font-size: 14px;
+      color: #515a6e;
+    }
   }
 }

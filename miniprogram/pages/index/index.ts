@@ -4,6 +4,7 @@ interface IPage {
   _setTempFilePath: (path: string) => void;
   handleGetUserInfo: WechatMiniprogram.EventCallback;
   handleChooseImage: () => void;
+  handleChangeCurrentFrame: WechatMiniprogram.EventCallback;
   [key: string]: any;
 }
 
@@ -119,6 +120,20 @@ Page<IData, IPage>({
       success: ({ tempFilePaths }) => {
         this._setTempFilePath(tempFilePaths[0]);
       },
+    });
+  },
+
+  handleChangeCurrentFrame({ currentTarget }) {
+    const { index } = currentTarget.dataset;
+    const { frames } = this.data;
+    const movableRect = Object.assign({}, this.data.movableRect);
+    const currentFrame = Number(index);
+    movableRect.translateX = (frames[currentFrame].rect.x / frames[currentFrame].rect.frameSize) * CANVAS_SIZE;
+    movableRect.translateY = (frames[currentFrame].rect.y / frames[currentFrame].rect.frameSize) * CANVAS_SIZE;
+    movableRect.scale = frames[currentFrame].rect.contentSize / frames[currentFrame].rect.frameSize;
+    this.setData({
+      currentFrame,
+      movableRect,
     });
   },
 });

@@ -1,6 +1,5 @@
 .canvas-container {
   position: relative;
-  outline: 1px solid #f1f2f3;
   box-sizing: border-box;
   margin: 20px auto;
 
@@ -67,4 +66,13 @@
       color: #515a6e;
     }
   }
+}
+
+#canvas {
+  width: 512px;
+  height: 512px;
+  position: absolute;
+  left: -600px;
+  top: -600px;
+  pointer-events: none;
 }

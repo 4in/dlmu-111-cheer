@@ -9,10 +9,13 @@
       <movable-view
         class="movable"
         style="width: {{movableRect.width}}px; height: {{movableRect.height}}px"
-        direction="all"
-        scale
+        direction="none"
+        x="{{movableX}}"
+        y="{{movableY}}"
         scale-min="1"
         scale-value="{{scaleValue}}"
+        bindchange="handleChange"
+        bindscale="handleScale"
       >
         <image src="{{tempFilePath}}" style="width: {{imgWidth}}px" mode="widthFix"></image>
       </movable-view>
@@ -29,8 +32,8 @@
     ></image>
   </view>
   <view class="btns-container">
-    <button bindtap="handleChooseImage">ChooseImage</button>
-    <button bindtap="handleExport">Export</button>
+    <!-- <button bindtap="handleChooseImage">ChooseImage</button> -->
+    <button bindtap="handleExport">导出头像</button>
   </view>
   <view class="frames-container">
     <view
@@ -44,4 +47,5 @@
       <view class="frame-name">{{item.name}}</view>
     </view>
   </view>
+  <canvas id="canvas" canvas-id="canvas"></canvas>
 </view>

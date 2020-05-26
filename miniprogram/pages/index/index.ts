@@ -1,9 +1,20 @@
 import config from '../../config';
 
 interface IPage {
+  // 实时数据，如果放在data里会导致频繁刷新
+  realtimeState: {
+    x: number;
+    y: number;
+    scale: number;
+  };
+  tempFileSize: {
+    width: number;
+    height: number;
+  };
   _setTempFilePath: (path: string) => void;
   handleGetUserInfo: WechatMiniprogram.EventCallback;
   handleChooseImage: () => void;
+  handleExport: () => void;
   handleChangeCurrentFrame: WechatMiniprogram.EventCallback;
   [key: string]: any;
 }
@@ -31,6 +42,8 @@ interface IData {
   };
   // 图片容器宽度
   imgWidth: number;
+  movableX: number;
+  movableY: number;
   // 缩放比例
   scaleValue: number;
 }
@@ -53,7 +66,21 @@ Page<IData, IPage>({
       scale: 1,
     },
     imgWidth: CANVAS_SIZE,
+    // 用于控制movable-view的位置
+    movableX: 0,
+    movableY: 0,
     scaleValue: 1,
+  },
+
+  realtimeState: {
+    x: 0,
+    y: 0,
+    scale: 1,
+  },
+
+  tempFileSize: {
+    width: 0,
+    height: 0,
   },
 
   _setTempFilePath(path: string) {
@@ -61,6 +88,8 @@ Page<IData, IPage>({
     wx.getImageInfo({
       src: path,
       success: ({ width, height }) => {
+        this.tempFileSize.width = width;
+        this.tempFileSize.height = height;
         let imgWidth: number;
         let movableRect = { width: 0, height: 0, translateX: 0, translateY: 0, scale: 1 };
         if (width <= height) {
@@ -112,6 +141,7 @@ Page<IData, IPage>({
     });
   },
 
+  // 从相册中选择图片
   handleChooseImage() {
     wx.chooseImage({
       count: 1,
@@ -120,6 +150,68 @@ Page<IData, IPage>({
       success: ({ tempFilePaths }) => {
         this._setTempFilePath(tempFilePaths[0]);
       },
+    });
+  },
+
+  // 导出
+  handleExport() {
+    const { rootDir, frames, currentFrame, tempFilePath } = this.data;
+    const avatarInfo = Object.assign({}, this.realtimeState);
+    console.log(avatarInfo);
+    const tempFileSize = Object.assign({}, this.tempFileSize);
+    const frame = frames[currentFrame];
+    const ctx = wx.createCanvasContext('canvas');
+    // 绘制头像
+    ctx.drawImage(
+      tempFilePath,
+      0,
+      0,
+      tempFileSize.width,
+      tempFileSize.height,
+      frame.rect.x,
+      frame.rect.y,
+      frame.rect.contentSize,
+      frame.rect.contentSize
+    );
+    // 绘制边框
+    ctx.drawImage(`${rootDir}${frame.filename}`, 0, 0, 512, 512);
+    ctx.draw(true, function () {
+      wx.canvasToTempFilePath({
+        canvasId: 'canvas',
+        quality: 1,
+        x: 0,
+        y: 0,
+        width: 512,
+        height: 512,
+        destWidth: 512,
+        destHeight: 512,
+        success: ({ tempFilePath }) => {
+          wx.saveImageToPhotosAlbum({
+            filePath: tempFilePath,
+            success() {
+              wx.showToast({ title: '导出成功' });
+            },
+            fail() {
+              wx.showModal({
+                title: '提示',
+                content: '导出失败，请打开权限',
+                success({ confirm }) {
+                  if (confirm) {
+                    wx.openSetting({});
+                  }
+                },
+              });
+            },
+          });
+        },
+        fail() {
+          wx.showModal({
+            title: '提示',
+            content: '导出失败',
+            showCancel: false,
+          });
+        },
+      });
     });
   },
 
@@ -135,5 +227,15 @@ Page<IData, IPage>({
       currentFrame,
       movableRect,
     });
+  },
+
+  handleChange(event: any) {
+    const { x, y } = event.detail;
+    this.realtimeState.x = x;
+    this.realtimeState.y = y;
+  },
+
+  handleScale(event: any) {
+    this.realtimeState.scale = event.detail.scale;
   },
 });

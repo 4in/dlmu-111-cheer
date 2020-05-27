@@ -4,7 +4,7 @@ export default {
   // 边框
   frames: [
     {
-      name: '头像框1',
+      name: '我爱海大',
       filename: 'frame1.png',
       rect: {
         x: 68,
@@ -14,7 +14,7 @@ export default {
       },
     },
     {
-      name: '头像框2',
+      name: 'Love Forever',
       filename: 'frame2.png',
       rect: {
         x: 30,
@@ -24,7 +24,7 @@ export default {
       },
     },
     {
-      name: '头像框3',
+      name: '踏浪行舟',
       filename: 'frame3.png',
       rect: {
         x: 0,
@@ -34,7 +34,7 @@ export default {
       },
     },
     {
-      name: '头像框4',
+      name: '灼灼百十一',
       filename: 'frame4.png',
       rect: {
         x: 8,
@@ -44,7 +44,7 @@ export default {
       },
     },
     {
-      name: '头像框5',
+      name: '罗马柱',
       filename: 'frame5.png',
       rect: {
         x: 73,
@@ -54,7 +54,7 @@ export default {
       },
     },
     {
-      name: '头像框6',
+      name: '锦簇',
       filename: 'frame6.png',
       rect: {
         x: 13,
@@ -64,7 +64,7 @@ export default {
       },
     },
     {
-      name: '头像框7',
+      name: '新校门',
       filename: 'frame7.png',
       rect: {
         x: 74,
@@ -74,7 +74,7 @@ export default {
       },
     },
     {
-      name: '头像框8',
+      name: '沧浪扶鹏',
       filename: 'frame8.png',
       rect: {
         x: 73,
@@ -94,7 +94,7 @@ export default {
       },
     },
     {
-      name: '校船(红底)',
+      name: '乘风破浪',
       filename: 'frame10.png',
       rect: {
         x: 84,
@@ -104,7 +104,7 @@ export default {
       },
     },
     {
-      name: '海大大（蓝底）',
+      name: '海大大',
       filename: 'frame11.png',
       rect: {
         x: 82,
@@ -114,7 +114,7 @@ export default {
       },
     },
     {
-      name: '鱼',
+      name: '鱼跃龙门',
       filename: 'frame12.png',
       rect: {
         x: 91,
@@ -124,7 +124,7 @@ export default {
       },
     },
     {
-      name: '头像框13',
+      name: '荣光',
       filename: 'frame13.png',
       rect: {
         x: 43,
@@ -134,7 +134,7 @@ export default {
       },
     },
     {
-      name: '头像框14',
+      name: '踏浪',
       filename: 'frame14.png',
       rect: {
         x: 66,
@@ -144,7 +144,7 @@ export default {
       },
     },
     {
-      name: '头像框15',
+      name: '水波',
       filename: 'frame15.png',
       rect: {
         x: 36,
@@ -154,7 +154,7 @@ export default {
       },
     },
     {
-      name: '头像框16',
+      name: '简约蓝',
       filename: 'frame16.png',
       rect: {
         x: 74,
@@ -164,7 +164,7 @@ export default {
       },
     },
     {
-      name: '头像框17',
+      name: '船长',
       filename: 'frame17.png',
       rect: {
         x: 71,
@@ -174,7 +174,7 @@ export default {
       },
     },
     {
-      name: '头像框18',
+      name: '实木窗',
       filename: 'frame18.png',
       rect: {
         x: 57,

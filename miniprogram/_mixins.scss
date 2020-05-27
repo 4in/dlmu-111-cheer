@@ -1,0 +1,7 @@
+@mixin shadow-primary {
+  box-shadow: 0 4px 13px rgba($color: #1279ff, $alpha: 0.3);
+}
+
+@mixin shadow-secondary {
+  box-shadow: 0 4px 13px rgba($color: #1279ff, $alpha: 0.1);
+}

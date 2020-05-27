@@ -1,4 +1,4 @@
-<view>
+<view class="page-wrapper">
   <view class="canvas-container" style="width: {{canvasSize}}px; height: {{canvasSize}}px">
     <movable-area
       wx:if="{{tempFilePath}}"
@@ -21,8 +21,11 @@
       </movable-view>
     </movable-area>
     <view wx:else class="auth-wrapper">
-      <view>点击授权加载头像(仅保存在本地)</view>
-      <button class="btn-auth" open-type="getUserInfo" bindgetuserinfo="handleGetUserInfo">授权</button>
+      <view class="auth-text">点击授权加载头像(仅用于头像生成)</view>
+      <button class="btn btn-auth btn-primary" open-type="getUserInfo" bindgetuserinfo="handleGetUserInfo">
+        <text class="iconfont icon-magic-line"></text>
+        <text>授权</text>
+      </button>
     </view>
     <image
       wx:if="{{tempFilePath}}"
@@ -33,18 +36,27 @@
   </view>
   <view class="btns-container">
     <!-- <button bindtap="handleChooseImage">ChooseImage</button> -->
-    <button bindtap="handleExport">导出头像</button>
+    <button class="btn" hover-class="btn-hover" open-type="share">
+      <text class="iconfont icon-share-line"></text>
+      <text>分享页面</text>
+    </button>
+    <button wx:if="{{tempFilePath}}" class="btn btn-primary" hover-class="btn-hover" bindtap="handleExport">
+      <text class="iconfont icon-download-line"></text>
+      <text>导出头像</text>
+    </button>
   </view>
   <view class="frames-container">
     <view
-      class="frame-wrapper"
+      class="frame-wrapper {{currentFrame === index ? 'active' : ''}}"
       wx:for="{{frames}}"
       wx:key="filename"
       bindtap="handleChangeCurrentFrame"
       data-index="{{index}}"
     >
-      <image class="frame-img" src="{{rootDir}}{{item.filename}}" mode="aspectFill"></image>
-      <view class="frame-name">{{item.name}}</view>
+      <view class="frame-box">
+        <image class="frame-img" src="{{rootDir}}{{item.filename}}" mode="aspectFill"></image>
+        <view class="frame-name">{{item.name}}</view>
+      </view>
     </view>
   </view>
   <canvas id="canvas" canvas-id="canvas"></canvas>

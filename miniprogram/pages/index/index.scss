@@ -1,7 +1,16 @@
+@import '../../mixins';
+
+.page-wrapper {
+  background: #f3f8ff;
+  padding-top: 16px;
+  // 全面屏底部有Dangerous Zone
+  padding-bottom: 30px;
+}
+
 .canvas-container {
   position: relative;
   box-sizing: border-box;
-  margin: 20px auto;
+  margin: 0 auto 24px;
 
   .movable-area {
     width: 100%;
@@ -20,11 +29,20 @@
     top: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba($color: #000, $alpha: 0.1);
+    background-color: rgba($color: #193b86, $alpha: 0.1);
     justify-content: center;
     align-items: center;
     flex-direction: column;
     word-break: break-word;
+    border-radius: 16px;
+
+    .auth-text {
+      display: block;
+      margin-bottom: 16px;
+      font-weight: bold;
+      color: #193b68;
+      font-size: 16px;
+    }
 
     .btn-auth {
       margin-top: 20rpx;
@@ -49,12 +67,24 @@
   margin-top: 30rpx;
   display: flex;
   flex-wrap: wrap;
+  align-items: stretch;
 
   .frame-wrapper {
-    margin-top: 16rpx;
+    margin-top: 16px;
     width: 33.3333%;
     max-width: 33.3333%;
     text-align: center;
+
+    .frame-box {
+      display: inline-block;
+      background-color: #fff;
+      border-radius: 12px;
+      @include shadow-secondary;
+      padding: 10px 10px;
+      border: 2px solid transparent;
+      height: 100%;
+      transition: all 0.2s ease;
+    }
 
     .frame-img {
       width: 80px;
@@ -62,8 +92,17 @@
     }
 
     .frame-name {
+      margin-top: 6px;
       font-size: 14px;
-      color: #515a6e;
+      color: #193b68;
+      font-weight: bold;
+    }
+
+    &.active {
+      .frame-box {
+        border-color: #1279ff;
+        @include shadow-primary;
+      }
     }
   }
 }

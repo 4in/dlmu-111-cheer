@@ -83,6 +83,35 @@ Page<IData, IPage>({
     height: 0,
   },
 
+  onReady() {
+    wx.getSetting({
+      success: ({ authSetting }) => {
+        if (authSetting['scope.userInfo']) {
+          wx.getUserInfo({
+            lang: 'zh_CN',
+            success: ({ userInfo }) => {
+              wx.setStorageSync('userInfo', userInfo);
+              this.setData({ userInfo });
+              wx.downloadFile({
+                url: userInfo.avatarUrl.replace(/\d+$/, '0'),
+                success: ({ tempFilePath }) => {
+                  this._setTempFilePath(tempFilePath);
+                },
+              });
+            },
+          });
+        }
+      },
+    });
+  },
+
+  onShareAppMessage() {
+    return {
+      title: '快来生成你的专属头像吧~',
+      imageUrl: '/assets/share-cover.png',
+    };
+  },
+
   _setTempFilePath(path: string) {
     const { frames, currentFrame } = this.data;
     wx.getImageInfo({
@@ -102,28 +131,6 @@ Page<IData, IPage>({
         movableRect.translateY = (frames[currentFrame].rect.y / frames[currentFrame].rect.frameSize) * CANVAS_SIZE;
         movableRect.scale = frames[currentFrame].rect.contentSize / frames[currentFrame].rect.frameSize;
         this.setData({ tempFilePath: path, movableRect, imgWidth });
-      },
-    });
-  },
-
-  onReady() {
-    wx.getSetting({
-      success: ({ authSetting }) => {
-        if (authSetting['scope.userInfo']) {
-          wx.getUserInfo({
-            lang: 'zh_CN',
-            success: ({ userInfo }) => {
-              wx.setStorageSync('userInfo', userInfo);
-              this.setData({ userInfo });
-              wx.downloadFile({
-                url: userInfo.avatarUrl.replace(/\d+$/, '0'),
-                success: ({ tempFilePath }) => {
-                  this._setTempFilePath(tempFilePath);
-                },
-              });
-            },
-          });
-        }
       },
     });
   },
@@ -155,6 +162,7 @@ Page<IData, IPage>({
 
   // 导出
   handleExport() {
+    wx.showLoading({ title: '生成中' });
     const { rootDir, frames, currentFrame, tempFilePath } = this.data;
     const avatarInfo = Object.assign({}, this.realtimeState);
     console.log(avatarInfo);
@@ -189,7 +197,15 @@ Page<IData, IPage>({
           wx.saveImageToPhotosAlbum({
             filePath: tempFilePath,
             success() {
-              wx.showToast({ title: '导出成功' });
+              wx.showModal({
+                title: '提示',
+                content: '导出成功，分享给好友吧~',
+                success({ confirm }) {
+                  if (confirm) {
+                    wx.showShareMenu({});
+                  }
+                },
+              });
             },
             fail() {
               wx.showModal({
@@ -210,6 +226,9 @@ Page<IData, IPage>({
             content: '导出失败',
             showCancel: false,
           });
+        },
+        complete() {
+          wx.hideLoading();
         },
       });
     });

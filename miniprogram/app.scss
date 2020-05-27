@@ -1,4 +1,39 @@
+@import './iconfont.scss';
+@import './mixins';
+
 view,
 text {
   box-sizing: border-box;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto !important;
+  min-width: 140px;
+  background: #fff;
+  color: #1279ff;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 14px;
+  padding: 10px 24px;
+  min-height: 0 !important;
+  @include shadow-secondary;
+  transition: all 0.2s ease;
+
+  .iconfont {
+    margin-right: 6px;
+  }
+}
+
+.btn-hover {
+  border-color: #1279ff;
+  @include shadow-primary;
+}
+
+.btn-primary {
+  background: #1279ff;
+  color: #fff;
 }

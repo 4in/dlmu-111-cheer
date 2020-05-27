@@ -114,7 +114,7 @@ export default {
       },
     },
     {
-      name: '鱼跃龙门',
+      name: '连年有余',
       filename: 'frame12.png',
       rect: {
         x: 91,

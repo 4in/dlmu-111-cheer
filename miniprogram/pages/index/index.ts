@@ -1,3 +1,4 @@
+import mta from '../../lib/mta_analysis';
 import config from '../../config';
 
 interface IPage {
@@ -217,6 +218,9 @@ Page<IData, IPage>({
                   }
                 },
               });
+            },
+            complete() {
+              mta.Event.stat('generate', { name: frame.name });
             },
           });
         },

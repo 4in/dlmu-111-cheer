@@ -34,7 +34,7 @@
     "gulp-sass": "^4.1.0",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.4",
-    "miniprogram-api-typings": "^2.10.4",
+    "miniprogram-api-typings": "^3.3.0",
     "prettier": "^2.0.5",
     "typescript": "^3.9.3"
   }

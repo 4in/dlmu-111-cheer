@@ -84,28 +84,6 @@ Page<IData, IPage>({
     height: 0,
   },
 
-  onReady() {
-    wx.getSetting({
-      success: ({ authSetting }) => {
-        if (authSetting['scope.userInfo']) {
-          wx.getUserInfo({
-            lang: 'zh_CN',
-            success: ({ userInfo }) => {
-              wx.setStorageSync('userInfo', userInfo);
-              this.setData({ userInfo });
-              wx.downloadFile({
-                url: userInfo.avatarUrl.replace(/\d+$/, '0'),
-                success: ({ tempFilePath }) => {
-                  this._setTempFilePath(tempFilePath);
-                },
-              });
-            },
-          });
-        }
-      },
-    });
-  },
-
   onShareAppMessage() {
     return {
       title: '快来生成你的专属头像吧~',
@@ -137,14 +115,18 @@ Page<IData, IPage>({
   },
 
   handleGetUserInfo({ detail }) {
-    const { errMsg, userInfo } = detail as { errMsg: string; userInfo: WechatMiniprogram.UserInfo };
-    if (!~errMsg.indexOf(':ok')) return;
-    wx.setStorageSync('userInfo', userInfo);
-    this.setData({ userInfo });
-    wx.downloadFile({
-      url: userInfo.avatarUrl.replace(/\d+$/, '0'),
-      success: ({ tempFilePath }) => {
-        this._setTempFilePath(tempFilePath);
+    wx.getUserProfile({
+      lang: 'zh_CN',
+      desc: '仅用于生成头像',
+      success: ({ userInfo }) => {
+        wx.setStorageSync('userInfo', userInfo);
+        this.setData({ userInfo });
+        wx.downloadFile({
+          url: userInfo.avatarUrl.replace(/\d+$/, '0'),
+          success: ({ tempFilePath }) => {
+            this._setTempFilePath(tempFilePath);
+          },
+        });
       },
     });
   },
@@ -201,11 +183,7 @@ Page<IData, IPage>({
               wx.showModal({
                 title: '提示',
                 content: '导出成功，分享给好友吧~',
-                success({ confirm }) {
-                  if (confirm) {
-                    wx.showShareMenu({});
-                  }
-                },
+                showCancel: false,
               });
             },
             fail() {

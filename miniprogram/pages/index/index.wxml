@@ -22,7 +22,7 @@
     </movable-area>
     <view wx:else class="auth-wrapper">
       <view class="auth-text">点击授权加载头像(仅用于头像生成)</view>
-      <button class="btn btn-auth btn-primary" open-type="getUserInfo" bindgetuserinfo="handleGetUserInfo">
+      <button class="btn btn-auth btn-primary" bindtap="handleGetUserInfo">
         <text class="iconfont icon-magic-line"></text>
         <text>授权</text>
       </button>

@@ -19,6 +19,7 @@
     "pretty": true,
     "strictPropertyInitialization": true,
     "lib": ["ESNext"],
+    "types": ["miniprogram-api-typings"],
     "typeRoots": ["./typings"]
   },
   "include": ["./**/*.ts"],
